@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="UserRole" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="UserRole" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.UserRolePo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="UserRoleResult"  class="UserRole">
+      <result property="Id"    column="Id"/>
+      <result property="RoleId"    column="RoleId"/>
+      <result property="UserId"    column="UserId"/>
+    </resultMap>
+  </resultMaps>
+
+
+  <statements>
+    <select id="GetUserRoleById" parameterClass="int" resultClass="UserRole">
+      SELECT * FROM UserRole WHERE Id = #Id#
+    </select>
+
+    <insert id="AddUserRole" parameterClass="UserRole">
+      INSERT INTO UserRole  VALUES(#RoleId#,#UserId#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <insert id="AddUserRoles" parameterClass="List">
+      INSERT INTO UserRole  VALUES
+      <iterate conjunction=",">
+        (#[].RoleId#,#[].UserId#)
+      </iterate>
+    </insert>
+
+    <delete id="DeleteUserRole" parameterClass="int" restultClass="int">
+      DELETE FROM UserRole WHERE Id = #Id#
+    </delete>
+
+    <delete id="DeleteUserRoles" parameterClass="List" restultClass="int">
+      DELETE FROM UserRole
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <delete id="DeleteUserRoleByUserId" parameterClass="int" restultClass="int">
+      DELETE FROM UserRole WHERE UserId = #UserId#
+    </delete>
+
+    <delete id="DeleteUserRoleByRoleId" parameterClass="int" restultClass="int">
+      DELETE FROM UserRole WHERE RoleId = #RoleId#
+    </delete>
+
+    <update id="UpdateUserRole" parameterClass="UserRole" restltClass="int">
+      UPDATE UserRole SET RoleId = #RoleId#,UserId = #UserId# where Id = #Id#
+    </update>
+
+    <select id="GetAllUserRoles" resultClass="UserRole">
+      SELECT * FROM UserRole
+    </select>
+  </statements>
+</sqlMap>
+

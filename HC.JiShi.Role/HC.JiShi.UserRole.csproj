@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{62C8AF01-54B8-48A5-A507-3731DEE97E31}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>HC.JiShi.UserRole</RootNamespace>
+    <AssemblyName>HC.JiShi.UserRole</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\RefDll\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="IBatisNet.Common">
+      <HintPath>..\RefDll\IBatisNet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="IBatisNet.DataMapper">
+      <HintPath>..\RefDll\IBatisNet.DataMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Common\CacheKey.cs" />
+    <Compile Include="Common\CommonHelper.cs" />
+    <Compile Include="Common\DataCache.cs" />
+    <Compile Include="Common\Mapper.cs" />
+    <Compile Include="Entity\ModulePo.cs" />
+    <Compile Include="Entity\PagePo.cs" />
+    <Compile Include="Entity\PageActionPo.cs" />
+    <Compile Include="Entity\PageViewPo.cs" />
+    <Compile Include="Entity\PermissionPagePo.cs" />
+    <Compile Include="Entity\PermissionPageActionPo.cs" />
+    <Compile Include="Entity\RolePermissionPageActionPo.cs" />
+    <Compile Include="Entity\RolePermissionPagePo.cs" />
+    <Compile Include="Entity\RolePo.cs" />
+    <Compile Include="Entity\UserPermissionPageActionPo.cs" />
+    <Compile Include="Entity\UserPermissionPagePo.cs" />
+    <Compile Include="Entity\UserPo.cs" />
+    <Compile Include="Entity\UserRolePo.cs" />
+    <Compile Include="Model\Module.cs" />
+    <Compile Include="Model\ModulePage.cs" />
+    <Compile Include="Model\Page.cs" />
+    <Compile Include="Model\PageAction.cs" />
+    <Compile Include="Model\PageView.cs" />
+    <Compile Include="Model\UserPermissionPage.cs" />
+    <Compile Include="Model\UserPermissionPageAction.cs" />
+    <Compile Include="Model\Role.cs" />
+    <Compile Include="Model\RoleUsers.cs" />
+    <Compile Include="Model\User.cs" />
+    <Compile Include="Model\UserRoles.cs" />
+    <Compile Include="Model\RolePermissionPage.cs" />
+    <Compile Include="Model\RolePermissionPageAction.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceImp\ModuleImp\IModuleDao.cs" />
+    <Compile Include="ServiceImp\ModuleImp\ModuleDao.cs" />
+    <Compile Include="ServiceImp\ModuleService.cs" />
+    <Compile Include="ServiceImp\PageActionService.cs" />
+    <Compile Include="ServiceImp\PageActionImp\IPageActionDao.cs" />
+    <Compile Include="ServiceImp\PageActionImp\PageActionDao.cs" />
+    <Compile Include="ServiceImp\PageService.cs" />
+    <Compile Include="ServiceImp\PageImp\IPageDao.cs" />
+    <Compile Include="ServiceImp\PageImp\PageDao.cs" />
+    <Compile Include="ServiceImp\PermissionImp\IPermissionPageActionDao.cs" />
+    <Compile Include="ServiceImp\PermissionImp\IPermissionPageDao.cs" />
+    <Compile Include="ServiceImp\PermissionImp\PermissionPageActionDao.cs" />
+    <Compile Include="ServiceImp\PermissionImp\PermissionPageDao.cs" />
+    <Compile Include="ServiceImp\PermissionService.cs" />
+    <Compile Include="ServiceImp\RoleService.cs" />
+    <Compile Include="ServiceImp\RoleImp\IRoleDao.cs" />
+    <Compile Include="ServiceImp\RoleImp\RoleDao.cs" />
+    <Compile Include="ServiceImp\UserRoleImp\IUserRoleDao.cs" />
+    <Compile Include="ServiceImp\UserRoleImp\UserRoleDao.cs" />
+    <Compile Include="ServiceImp\UserService.cs" />
+    <Compile Include="ServiceImp\UserImp\IUserDao.cs" />
+    <Compile Include="ServiceImp\UserImp\UserDao.cs" />
+    <Compile Include="Service\BussinessException.cs" />
+    <Compile Include="Service\Container.cs" />
+    <Compile Include="Service\IModuleService.cs" />
+    <Compile Include="Service\IPageActionService.cs" />
+    <Compile Include="Service\IPageService.cs" />
+    <Compile Include="Service\IPermissionService.cs" />
+    <Compile Include="Service\IRoleService.cs" />
+    <Compile Include="Service\IUserService.cs" />
+    <Compile Include="Service\PageData.cs" />
+    <Compile Include="Service\Pager.cs" />
+    <Compile Include="Service\Result.cs" />
+    <Compile Include="Service\Sorter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\HC.Jishi.Common\HC.Jishi.Common.csproj">
+      <Project>{9b90f2f0-48da-494d-876d-277fce8a3388}</Project>
+      <Name>HC.Jishi.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Maps\PageActionMap.xml" />
+    <Content Include="Maps\PageMap.xml" />
+    <Content Include="Maps\PermissionPageActionMap.xml" />
+    <Content Include="Maps\PermissionPageMap.xml" />
+    <Content Include="Maps\RoleMap.xml" />
+    <Content Include="Maps\UserMap.xml" />
+    <Content Include="Maps\UserRoleMap.xml">
+      <SubType>
+      </SubType>
+    </Content>
+    <Content Include="Maps\ModuleMap.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config\providers.config" />
+    <None Include="config\SQLMap.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

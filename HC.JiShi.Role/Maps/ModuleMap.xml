@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="Page" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="Module" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.ModulePo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="ModuleResult"  class="Module">
+      <result property="Id"    column="Id"/>
+      <result property="ModuleName"    column="ModuleName"/>
+    </resultMap>
+  </resultMaps>
+
+  <statements>
+    <insert id="AddModule" parameterClass="Module">
+      INSERT INTO Module  VALUES(#ModuleName#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <delete id="DeleteModule" parameterClass="int" restultClass="int">
+      DELETE FROM Module WHERE Id = #Id#
+    </delete>
+
+    <update id="UpdateModule" parameterClass="Module" restltClass="int">
+      UPDATE Module SET ModuleName=#ModuleName# WHERE Id = #Id#
+    </update>
+
+    <select id="GetModule" parameterClass="int" resultClass="Module">
+      SELECT * FROM Module WHERE Id = #Id#
+    </select>
+
+    <select id="GetModuleList" resultClass="Module">
+      SELECT * FROM Module
+      <dynamic prepend="ORDER BY">
+        <isNotEmpty property="OrderString">
+          $OrderString$
+        </isNotEmpty>
+      </dynamic>
+    </select>
+
+    <select id="GetModuleByName" parameterClass="string" resultClass="Module">
+      SELECT * FROM Module WHERE ModuleName = #ModuleName#
+    </select>
+
+    <select id="GetModuleWithOutId" parameterClass="Hashtable" resultClass="Module">
+      SELECT * FROM Module WHERE ModuleName = #ModuleName# AND Id != #Id#
+    </select>
+  </statements>
+</sqlMap>
+

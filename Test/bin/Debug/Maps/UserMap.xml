@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="User" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名   
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="User" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.UserPo" />
+    <typeAlias alias="UserPermissionPage" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.UserPermissionPagePo" />
+    <typeAlias alias="UserPermissionPageAction" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.UserPermissionPageActionPo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="UserResult"  class="User">
+      <!--如果不取别名要使用类的全路径‘HC.JiShi.UserRole.Entity.UserPo’-->
+      <result property="Id"    column="Id"/>
+      <result property="UserName"    column="UserName"/>
+      <result property="Password"    column="Password"/>
+      <result property="CreateDate"    column="CreateDate"/>
+      <result property="IsAdmin"    column="IsAdmin"/>
+      <result property="IsValid"    column="IsValid"/>
+    </resultMap>
+    
+    <resultMap id="UserPermissionPageResult"  class="UserPermissionPage">
+      <result property="UserId"    column="UserId"/>
+      <result property="PageId"    column="PageId"/>
+      <result property="PageName"    column="PageName"/>
+      <result property="Url"    column="Url"/>
+      <result property="Domain"    column="Domain"/>
+    </resultMap>
+
+    <resultMap id="UserPermissionPageActionResult"  class="UserPermissionPageAction">
+      <result property="UserId"    column="UserId"/>
+      <result property="PageActionId"    column="PageActionId"/>
+      <result property="PageId"    column="PageId"/>
+      <result property="ActionName"    column="ActionName"/>
+      <result property="ActionUrl"    column="ActionUrl"/>
+    </resultMap>
+  </resultMaps>
+
+  <statements>
+    <select id="GetUserById" parameterClass="int" resultClass="User">
+      SELECT * FROM [User] WHERE Id=#Id#
+    </select>
+
+    <insert id="AddUser" parameterClass="User">
+      INSERT INTO [User]  VALUES(#UserName#,#Password#,#IsAdmin#,#IsValid#,#CreateDate#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <delete id="DeleteUser" parameterClass="int" restultClass="int">
+      DELETE FROM [User] WHERE Id=#Id#
+    </delete>
+
+    <delete id="DeleteUsers" parameterClass="List">
+      DELETE FROM [User]
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <update id="UpdateUser" parameterClass="User" restltClass="int">
+      UPDATE [User] SET UserName=#UserName#,Password=#Password#,IsAdmin=#IsAdmin#,IsValid=#IsValid#,CreateDate=#CreateDate# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdateUserName" parameterClass="Hashtable">
+      UPDATE [User] SET UserName = #UserName# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdatePassword" parameterClass="Hashtable">
+      UPDATE [User] SET Password = #Password# WHERE Id = #Id#
+    </update>
+
+    <select id="GetAllUsers" resultClass="User">
+      SELECT * FROM [User]
+    </select>
+
+    <select id="GetUserByUserName" parameterClass="string" resultClass="User">
+      SELECT * FROM [User] WHERE UserName = #UserName#
+    </select>
+
+    <select id="GetUserByUserNameAndPassword" parameterClass="Hashtable" resultClass="User">
+      SELECT * FROM [User] WHERE UserName = #UserName# AND [Password] = #Password#
+    </select>
+
+    <select id="GetUserWithoutId" parameterClass="Hashtable" resultClass="User">
+      SELECT * FROM [User] WHERE UserName = #UserName# AND Id != #Id#
+    </select>
+
+    <select id="GetUserListByRoleId" parameterClass="int" resultClass="User">
+      SELECT * FROM [User] u INNER JOIN UserRole ur ON u.Id = ur.UserId WHERE RoleId = #RoleId#
+    </select>
+
+    <select id="UserPermissionPageByType" parameterClass="int" resultClass="UserPermissionPage">
+      SELECT u.Id UserId,p.Id PageId,PageName,Url,Domain
+      FROM [User] u
+      INNER JOIN PermissionPage pp ON u.Id = pp.UserRoleId AND Type = #Type#
+      INNER JOIN Page p ON pp.PageId = p.Id
+    </select>
+
+    <select id="UserPermissionPageActionByType" parameterClass="int" resultClass="UserPermissionPage">
+      SELECT u.Id UserId, pa.Id PageActionId,pa.PageId ,pa.ActionName ,pa.ActionUrl
+      FROM [User] u
+      INNER JOIN PermissionPageAction ppa ON u.Id = ppa.UserRoleId AND Type = #Type#
+      INNER JOIN PageAction pa ON ppa.PageActionId = pa.Id
+    </select>
+  </statements>
+</sqlMap>
+

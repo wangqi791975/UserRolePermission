@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="PermissionPageAction" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="PermissionPageAction" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.PermissionPageActionPo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="PermissionPageActionResult"  class="PermissionPageAction">
+      <result property="Id"    column="Id"/>
+      <result property="Type"    column="Type"/>
+      <result property="UserRoleId"    column="UserRoleId"/>
+      <result property="PageActionId"    column="PageActionId"/>
+    </resultMap>
+  </resultMaps>
+
+  <statements>
+    <insert id="AddPermissionPageAction" parameterClass="PermissionPageAction">
+      INSERT INTO PermissionPageAction  VALUES(#Type#,#UserRoleId#,#PageActionId#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <insert id="AddPermissionPageActions" parameterClass="List">
+      INSERT INTO PermissionPageAction  VALUES
+      <iterate conjunction=",">
+        (#[].Type#,#[].UserRoleId#,#[].PageActionId#)
+      </iterate>
+    </insert>
+
+    <delete id="DeletePermissionPageAction" parameterClass="int" restultClass="int">
+      DELETE FROM PermissionPageAction WHERE Id=#Id#
+    </delete>
+
+    <delete id="DeletePermissionPageActions" parameterClass="List" restultClass="int">
+      DELETE FROM PermissionPageAction
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <update id="UpdatePermissionPageAction" parameterClass="PermissionPageAction" restltClass="int">
+      UPDATE PermissionPageAction SET Type=#Type#,UserRoleId=#UserRoleId#,PageActionId=#PageActionId# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdatePermissionPageActionPageActionId" parameterClass="Hashtable" restltClass="int">
+      UPDATE PermissionPageAction SET PageActionId=#PageActionId# WHERE Id=#Id#
+    </update>
+
+    <select id="GetPermissionPageActionById" parameterClass="int" resultClass="PermissionPageAction">
+      SELECT * FROM PermissionPageAction WHERE Id=#Id#
+    </select>
+
+    <select id="GetAllPermissionPageActions" resultClass="PermissionPageAction">
+      SELECT * FROM PermissionPageAction
+    </select>
+  </statements>
+</sqlMap>
+

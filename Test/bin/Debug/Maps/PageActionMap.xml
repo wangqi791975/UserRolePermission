@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="PageAction" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="PageAction" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.PageActionPo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="PageActionResult"  class="PageAction">
+      <result property="Id"    column="Id"/>
+      <result property="PageId"    column="PageId"/>
+      <result property="ActionName"    column="ActionName"/>
+      <result property="ActionUrl"    column="ActionUrl"/>
+    </resultMap>
+  </resultMaps>
+  <statements>
+
+    <insert id="AddPageAction" parameterClass="PageAction">
+      INSERT INTO PageAction  VALUES(#PageId#,#ActionName#,#ActionUrl#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <delete id="DeletePageAction" parameterClass="int" restultClass="int">
+      DELETE FROM PageAction WHERE Id=#Id#
+    </delete>
+
+    <delete id="DeletePageActions" parameterClass="List">
+      DELETE FROM PageAction
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <update id="UpdatePageAction" parameterClass="PageAction" restltClass="int">
+      UPDATE PageAction SET PageId=#PageId#,ActionName=#ActionName#,ActionUrl=#ActionUrl# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdatePageActionPageId" parameterClass="Hashtable" restltClass="int">
+      UPDATE PageAction SET PageId=#PageId# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdatePageActionName" parameterClass="Hashtable" restltClass="int">
+      UPDATE PageAction SET ActionName=#ActionName# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdatePageActionUrl" parameterClass="Hashtable" restltClass="int">
+      UPDATE PageAction SET ActionUrl=#ActionUrl# WHERE Id=#Id#
+    </update>
+
+    <select id="GetPageActionById" parameterClass="int" resultClass="PageAction">
+      SELECT * FROM PageAction WHERE Id=#Id#
+    </select>
+
+    <select id="GetPageActionByPageIdAndActioName" parameterClass="Hashtable" resultClass="PageAction">
+      SELECT * FROM PageAction WHERE PageId = #PageId# AND ActionName = #ActionName#
+    </select>
+
+    <select id="GetPageActionListByPageId" parameterClass="int" resultClass="PageAction">
+      SELECT * FROM PageAction WHERE PageId = #PageId#
+    </select>
+
+    <select id="GetAllPageActions" resultClass="PageAction">
+      SELECT * FROM PageAction
+    </select>
+
+    <select id="GetPageActionListByUserId" parameterClass="Hashtable" resultClass="PageAction">
+      SELECT * FROM PageAction pa INNER JOIN PermissionPageAction ppa ON pa.Id = ppa.PageActionId WHERE [Type] = #Type# AND UserRoleId = #UserId#
+    </select>
+
+    <select id="GetPageActionListByRoleId" parameterClass="Hashtable" resultClass="PageAction">
+      SELECT * FROM PageAction pa INNER JOIN PermissionPageAction ppa ON pa.Id = ppa.PageActionId WHERE [Type] = #Type# AND UserRoleId = #RoleId#
+    </select>
+  </statements>
+</sqlMap>
+

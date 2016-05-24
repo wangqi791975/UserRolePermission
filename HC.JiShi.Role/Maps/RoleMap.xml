@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="Role" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="Role" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.RolePo" />
+    <typeAlias alias="RolePermissionPage" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.RolePermissionPagePo" />
+    <typeAlias alias="RolePermissionPageAction" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.RolePermissionPageActionPo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="RoleResult"  class="Role">
+      <result property="Id"    column="Id"/>
+      <result property="RoleName"    column="RoleName"/>
+      <result property="IsAdmin"    column="IsAdmin"/>
+      <result property="IsValid"    column="IsValid"/>
+      <result property="CreateDate"    column="CreateDate"/>
+    </resultMap>
+
+    <resultMap id="RolePermissionPageResult"  class="RolePermissionPage">
+      <result property="RoleId"    column="RoleId"/>
+      <result property="PageId"    column="PageId"/>
+      <result property="PageName"    column="PageName"/>
+      <result property="Url"    column="Url"/>
+      <result property="Domain"    column="Domain"/>
+    </resultMap>
+
+    <resultMap id="RolePermissionPageActionResult"  class="RolePermissionPageAction">
+      <result property="RoleId"    column="RoleId"/>
+      <result property="PageActionId"    column="PageActionId"/>
+      <result property="PageId"    column="PageId"/>
+      <result property="ActionName"    column="ActionName"/>
+      <result property="ActionUrl"    column="ActionUrl"/>
+    </resultMap>
+  </resultMaps>
+
+  <statements>
+    <insert id="AddRole" parameterClass="Role">
+      INSERT INTO [Role]  VALUES(#RoleName#,#IsAdmin#,#IsValid#,#CreateDate#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <delete id="DeleteRole" parameterClass="int" restultClass="int">
+      DELETE FROM [Role] WHERE Id=#Id#
+    </delete>
+
+    <delete id="DeleteRoles" parameterClass="List" restultClass="int">
+      DELETE FROM [Role]
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <update id="UpdateRole" parameterClass="Role">
+      UPDATE [Role] SET RoleName=#RoleName#,IsAdmin=#IsAdmin#,IsValid=#IsValid#,CreateDate=#CreateDate# WHERE Id=#Id#
+    </update>
+
+    <update id="UpdateRoleName" parameterClass="Hashtable">
+      UPDATE [Role] SET RoleName=#RoleName# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdateRoleIsAdmin" parameterClass="Hashtable">
+      UPDATE [Role] SET IsAdmin=#IsAdmin# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdateRolesIsAdmin" parameterClass="Hashtable">
+      UPDATE [Role] SET IsAdmin = #IsAdmin#
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #Ids[]#
+      </iterate>
+    </update>
+
+    <update id="UpdateRoleIsValid" parameterClass="Hashtable">
+      UPDATE [Role] SET IsValid=#IsValid# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdateRolesIsValid" parameterClass="Hashtable">
+      UPDATE [Role] SET IsValid = #IsValid#
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #Ids[]#
+      </iterate>
+    </update>
+
+    <select id="GetRoleById" parameterClass="int" resultClass="Role">
+      SELECT * FROM [Role] WHERE Id = #Id#
+    </select>
+
+    <select id="GetRoleByName" parameterClass="string" resultClass="Role">
+      SELECT * FROM [Role] WHERE RoleName = #RoleName#
+    </select>
+
+    <select id="GetRoleWithoutId" parameterClass="Hashtable" resultClass="Role">
+      SELECT * FROM [Role] WHERE RoleName = #RoleName# AND Id != #Id#
+    </select>
+
+    <select id="GetAllRoles" resultClass="Role">
+      SELECT * FROM [Role]
+      <dynamic prepend="ORDER BY">
+        <isNotEmpty property="OrderString">
+          $OrderString$
+        </isNotEmpty>
+      </dynamic>
+    </select>
+
+    <select id="GetRoleListByUserId" parameterClass="int" resultClass="Role">
+      SELECT r.* FROM [Role] r INNER JOIN UserRole ur ON r.Id = ur.RoleId WHERE ur.UserId = #UserId#
+    </select>
+
+    <select id="RolePermissionPageByType" parameterClass="int" resultClass="RolePermissionPage">
+      SELECT r.Id RoleId,p.Id PageId,PageName,Url,Domain
+      FROM [Role] r
+      INNER JOIN PermissionPage pp ON r.Id = pp.UserRoleId AND Type = 1
+      INNER JOIN Page p ON pp.PageId = p.Id
+    </select>
+
+    <select id="RolePermissionPageActionByType" parameterClass="int" resultClass="RolePermissionPageAction">
+      SELECT r.Id RoleId, pa.Id PageActionId,pa.PageId ,pa.ActionName ,pa.ActionUrl
+      FROM [Role] r
+      INNER JOIN PermissionPageAction ppa ON r.Id = ppa.UserRoleId AND Type = 1
+      INNER JOIN PageAction pa ON ppa.PageActionId = pa.Id
+    </select>
+  </statements>
+</sqlMap>
+

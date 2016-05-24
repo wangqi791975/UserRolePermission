@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--namespace必须用否者就报错（读取配置文件报：未将对象引用设置到对象的实例）-->
+<sqlMap namespace="Page" xmlns="http://ibatis.apache.org/mapping" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <alias>
+    <!-- alias:取别名
+                    assembly:表示类所在的文件
+                    type:表示该类的完整的名称
+      -->
+    <typeAlias alias="Page" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.PagePo" />
+    <typeAlias alias="PageView" assembly="HC.JiShi.UserRole.dll" type="HC.JiShi.UserRole.Entity.PageViewPo" />
+  </alias>
+
+  <resultMaps>
+    <resultMap id="PageResult"  class="Page">
+      <result property="Id"    column="Id"/>
+      <result property="ModuleId"    column="ModuleId"/>
+      <result property="PageName"    column="PageName"/>
+      <result property="Url"    column="Url"/>
+      <result property="Domain"    column="Domain"/>
+    </resultMap>
+    <resultMap id="PageViewResult"  class="PageView">
+      <result property="Id"    column="Id"/>
+      <result property="ModuleId"    column="ModuleId"/>
+      <result property="ModuleName"    column="ModuleName"/>
+      <result property="PageName"    column="PageName"/>
+      <result property="Url"    column="Url"/>
+      <result property="Domain"    column="Domain"/>
+    </resultMap>
+  </resultMaps>
+
+  <statements>
+    <insert id="AddPage" parameterClass="Page">
+      INSERT INTO Page  VALUES(#PageName#,#Url#,#Domain#,#ModuleId#)
+      <selectKey resultClass="int" type="post" property="Id">
+        SELECT @@IDENTITY
+      </selectKey>
+    </insert>
+
+    <delete id="DeletePage" parameterClass="int" restultClass="int">
+      DELETE FROM Page WHERE Id = #Id#
+    </delete>
+
+    <delete id="DeletePages" parameterClass="List">
+      DELETE FROM Page
+      <iterate prepend="WHERE" open="(" close=")" conjunction="OR">
+        Id = #[]#
+      </iterate>
+    </delete>
+
+    <update id="UpdatePage" parameterClass="Page" restltClass="int">
+      UPDATE Page SET ModuleId=#ModuleId#,PageName=#PageName#,Url=#Url#,Domain=#Domain# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdatePageName" parameterClass="Hashtable" restltClass="int">
+      UPDATE Page SET PageName = #PageName# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdatePageUrl" parameterClass="Hashtable" restltClass="int">
+      UPDATE Page SET Url = #Url# WHERE Id = #Id#
+    </update>
+
+    <update id="UpdatePageDomain" parameterClass="Hashtable" restltClass="int">
+      UPDATE Page SET Domain = #Domain# WHERE Id = #Id#
+    </update>
+
+    <select id="GetPageById" parameterClass="int" resultClass="Page">
+      SELECT * FROM Page WHERE Id = #Id#
+    </select>
+
+    <select id="GetPageByPageName" parameterClass="string" resultClass="Page">
+      SELECT * FROM Page WHERE PageName = #PageName#
+    </select>
+
+    <select id="GetPageWithoutId" parameterClass="Hashtable" resultClass="Page">
+      SELECT * FROM Page WHERE PageName = #PageName# AND Id != #Id#
+    </select>
+
+    <select id="GetPageByUrl" parameterClass="string" resultClass="Page">
+      SELECT * FROM Page WHERE Url = #Url#
+    </select>
+
+    <select id="GetPageByUrlWithoutId" parameterClass="Hashtable" resultClass="Page">
+      SELECT * FROM Page WHERE Url = #Url# AND Id != #Id#
+    </select>
+
+    <select id="GetAllPages" resultClass="Page">
+      SELECT * FROM Page
+    </select>
+
+    <select id="GetAllPageViews" resultClass="PageView">
+      SELECT p.*,m.ModuleName FROM Page p INNER JOIN Module m ON p.ModuleId = m.Id
+      <dynamic prepend="ORDER BY">
+        <isNotEmpty property="OrderString">
+          $OrderString$
+        </isNotEmpty>
+      </dynamic>
+    </select>
+
+    <select id="GetPageListByUserId" parameterClass="Hashtable" resultClass="Page">
+      SELECT * FROM Page p INNER JOIN PermissionPage pp ON p.Id = pp.PageId WHERE [Type] = #Type# AND UserRoleId = #UserId#
+    </select>
+
+    <select id="GetPageListByRoleId" parameterClass="Hashtable" resultClass="Page">
+      SELECT p.* FROM Page p INNER JOIN PermissionPage pp ON p.Id = pp.PageId WHERE [Type] = #Type# AND UserRoleId = #RoleId#
+    </select>
+  </statements>
+</sqlMap>
+
